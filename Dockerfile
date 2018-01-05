@@ -4,7 +4,7 @@ MAINTAINER Hleb Rubanau <g.rubanau@gmail.com>
 # install docker cli
 USER root
 
-RUN apk add --update sudo
+RUN apk add --update sudo ansible
 
 
 ARG DOCKER_CLI_VERSION=17.03.2
@@ -26,7 +26,7 @@ RUN wget -q -O /tmp/terraform.zip \
 # hack to bypass issue with .dockercfg location, as we tend to run wrapped docker client via sudo
 RUN touch /var/jenkins_home/.dockercfg \
     && chown jenkins:jenkins /var/jenkins_home/.dockercfg \
-    && ln -sf /root/.dockercfg /var/jenkins_home/.dockercfg
+    && ln -sf /var/jenkins_home/.dockercfg /root/.dockercfg
 
 ADD sudoers /etc/sudoers
 ADD docker_wrapper /usr/local/bin/docker
