@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         BASE_IMAGE="jenkins/jenkins:lts-alpine"
-        TARGET_IMAGE="hleb/nginx-letsencrypt"
+        TARGET_IMAGE="hleb/jenkins-cloudbuilder"
 
         DEFAULT_TAG='latest'
         GIT_TAG="$GIT_COMMIT".take(8)
