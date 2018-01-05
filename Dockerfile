@@ -24,9 +24,9 @@ RUN wget -q -O /tmp/terraform.zip \
     && rm -rf terraform*
 
 # hack to bypass issue with .dockercfg location, as we tend to run wrapped docker client via sudo
-RUN touch /var/jenkins/home/.dockercfg \
-    && chown jenkins:jenkins /var/jenkins/home/.dockercfg \
-    && ln -sf /root/.dockercfg /var/jenkins/home/.dockercfg
+RUN touch /var/jenkins_home/.dockercfg \
+    && chown jenkins:jenkins /var/jenkins_home/.dockercfg \
+    && ln -sf /root/.dockercfg /var/jenkins_home/.dockercfg
 
 ADD sudoers /etc/sudoers
 ADD docker_wrapper /usr/local/bin/docker
