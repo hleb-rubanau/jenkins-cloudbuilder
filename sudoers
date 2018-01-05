@@ -1,0 +1,3 @@
+
+root    ALL=(ALL:ALL) ALL
+jenkins      ALL = (root) NOPASSWD:/usr/local/bin/docker-cli
