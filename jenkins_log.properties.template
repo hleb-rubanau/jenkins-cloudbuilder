@@ -1,0 +1,3 @@
+handlers=java.util.logging.ConsoleHandler
+jenkins.level=JENKINS_LOGLEVEL
+java.util.logging.ConsoleHandler.level=JENKINS_LOGLEVEL
