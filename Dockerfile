@@ -48,3 +48,4 @@ RUN bash -c 'for util in docker jenkins_cloudbuilder_entrypoint.sh ; do chown je
 ENTRYPOINT [ "/usr/local/bin/jenkins_cloudbuilder_entrypoint.sh" ]
 
 USER jenkins
+ENV PRIVATE_REGISTRY_PORT=443
