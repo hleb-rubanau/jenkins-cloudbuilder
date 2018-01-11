@@ -15,7 +15,8 @@ hudsonRealm.createAccount(user, pass)
 instance.setSecurityRealm(hudsonRealm)
  
 def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+strategy.setAllowAnonymousRead(false)
 instance.setAuthorizationStrategy(strategy)
 instance.save()
  
-Jenkins.instance.getInjector().getInstance(AdminWhitelistRule.class)
+Jenkins.instance.getInjector().getInstance(AdminWhitelistRule.class).setMasterKillSwitch(false)
