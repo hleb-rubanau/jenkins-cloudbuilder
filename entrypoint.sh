@@ -5,6 +5,10 @@ function say() {
     echo "[$0] $*" >&2
 }
 
+function die() {
+    say "ERROR: $*" ; exit 1;
+}
+
 # self-provision ssh key
 SSHKEY=~/.ssh/id_rsa
 if [ ! -e $SSHKEY ]; then
@@ -23,7 +27,7 @@ unset SSHKEY
 LOGPROP_FILE=/tmp/jenkins_log.properties 
 JENKINS_LOGLEVEL=${JENKINS_LOGLEVEL:-INFO}
 sed -e s/JENKINS_LOGLEVEL/${JENKINS_LOGLEVEL}/g \
-    /usr/share/jenkins-cloudbuilder/jenkins_log.properties.template \
+    /usr/share/jenkins_cloudbuilder/jenkins_log.properties.template \
     > $LOGPROP_FILE
 
 export JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.config.file=$LOGPROP_FILE "
@@ -31,6 +35,15 @@ export JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.config.file=$LOGPROP_FILE "
 # run custom adapter for insecure secrets injection
 sudo jenkins_cloudbuilder_secrets_adapter.sh 
 
+if [ ! -z "$JENKINS_PROVISIONING_FILE" ]; then
+  say "Found JENKINS_PROVISIONING_FILE=$JENKINS_PROVISIONING_FILE"
+  PROVISION_HOOK=/usr/share/jenkins_cloudbuilder/bootstrapper.sh
+  say "Invoking bootstrapper $PROVISION_HOOK"
+  pushd $(pwd)
+  source $PROVISION_HOOK
+  popd 
+  unset JENKINS_PROVISIONING_FILE
+fi
 #TODO: prepopulate jobs when needed
 
 # pass execution to upstream entrypoint

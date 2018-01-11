@@ -32,7 +32,7 @@ ADD plugins.txt /usr/share/jenkins_cloudbuilder/default_plugins_list.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins_cloudbuilder/default_plugins_list.txt
 
 # install logging template, used in custom entrypoint
-ADD jenkins_log.properties.template /usr/share/jenkins-cloudbuilder/jenkins_log.properties.template 
+ADD jenkins_log.properties.template /usr/share/jenkins_cloudbuilder/jenkins_log.properties.template 
 
 # now let's make it more friendly to local docker with proxied socked and possible uids mismatch
 ADD sudoers /etc/sudoers
@@ -41,6 +41,8 @@ ADD docker_wrapper /usr/local/bin/docker
 # install custom entrypoint and make everything executable
 ADD secrets_adapter.sh /usr/local/bin/jenkins_cloudbuilder_secrets_adapter.sh
 RUN chmod 0544 /usr/local/bin/jenkins_cloudbuilder_secrets_adapter.sh 
+
+COPY bootstrapper.sh /usr/share/jenkins_cloudbuilder/bootstrapper.sh
 
 ADD entrypoint.sh /usr/local/bin/jenkins_cloudbuilder_entrypoint.sh
 RUN bash -c 'for util in docker jenkins_cloudbuilder_entrypoint.sh ; do chown jenkins:jenkins /usr/local/bin/$util && chmod 0554 /usr/local/bin/$util ; done'
