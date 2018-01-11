@@ -11,7 +11,11 @@ if [ -e /var/run/secrets ]; then exit 0 ; fi
 PERSISTENT_DIR=/var/jenkins_home/jenkins_cloudbuilder_secrets
 mkdir -p $PERSISTENT_DIR
 ln -s $PERSISTENT_DIR /var/run/secrets
- 
+
+if [ -e /var/run/secrets/jenkins-user ] && [ -e /var/run/secrets/jenkins-pass ]; then
+    exit 0;
+fi
+
 JENKINS_USER=${JENKINS_USER:-admin}
 echo "Jenkins user: $JENKINS_USER" >&2
 
