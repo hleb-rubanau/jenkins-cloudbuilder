@@ -10,7 +10,7 @@ fi
 PROVISION_DIR=${PROVISION_DIR:-/var/jenkins_home/system/provisioning}
 CURDIR=$(pwd)
 mkdir -pv $PROVISION_DIR/files
-pushd $PROVISION_DIR
+pushd $PROVISION_DIR >/dev/null
 
 target_file="files/$(basename $JENKINS_PROVISIONING_FILE )"
 
@@ -57,19 +57,24 @@ if [[ "$target_file" = *.tgz ]] || [[ "$target_file" = *.zip ]]; then
     
         POSTPROVISION_DIR=/var/jenkins_home/system/postprovision_hooks
         if [ -e $POSTPROVISION_DIR ]; then
-            pushd $POSTPROVISION_DIR
-            for script in $( find -type f -perm /u+x ); do
-                pushd $POSTPROVISION_DIR
+            # because unzip does not preserve permissions
+            chmod u+x $POSTPROVISION_DIR/* 
+            pushd $POSTPROVISION_DIR > /dev/null
+            # execute files with numeric prefixes
+            for script in $POSTPROVISION_DIR/[0-9]*; do
+                pushd $POSTPROVISION_DIR > /dev/null
                 say "POSTPROVISION: $(pwd)/$script"
                 $script
-                popd
+                popd > /dev/null
             done
 
-            popd
+            popd > /dev/null
+        else 
+            say "No postprovision dir found (looked for: $POSTPROVISION_DIR)"
         fi
     fi
 else
     die "Unkown format of provisioning file: $JENKINS_PROVISIONING_FILE "
 fi
 
-popd
+popd > /dev/null

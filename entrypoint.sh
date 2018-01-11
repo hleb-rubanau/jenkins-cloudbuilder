@@ -39,9 +39,9 @@ if [ ! -z "$JENKINS_PROVISIONING_FILE" ]; then
   say "Found JENKINS_PROVISIONING_FILE=$JENKINS_PROVISIONING_FILE"
   PROVISION_HOOK=/usr/share/jenkins_cloudbuilder/bootstrapper.sh
   say "Invoking bootstrapper $PROVISION_HOOK"
-  pushd $(pwd)
+  pushd $(pwd) > /dev/null
   source $PROVISION_HOOK
-  popd 
+  popd  > /dev/null
   unset JENKINS_PROVISIONING_FILE
 fi
 #TODO: prepopulate jobs when needed
