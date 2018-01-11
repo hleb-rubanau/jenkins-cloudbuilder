@@ -29,7 +29,7 @@ else
     fi
 fi
 
-if [[ "$target_file" = *.tgz ]]; then
+if [[ "$target_file" = *.tgz ]] || [[ "$target_file" = *.zip ]]; then
 
     newfile_md5sum=$(md5sum $PWD/$target_file | cut -f1 -d' ')
     if [ -s md5sums.txt ] ; then
@@ -42,11 +42,17 @@ if [[ "$target_file" = *.tgz ]]; then
         say "SAME FILE ALREADY DEPLOYED: $oldfile_md5sum"
     else
         echo "$(date +'%F %T') $newfile_md5sum $JENKINS_PROVISIONING_FILE $target_file" >> md5sums.txt
-        say "UNPACKING $target_file"
 
-        ### TODO: for some reason it does not exclude files from archive! fix later   
-        exclusion_pattern=./${PWD#/var/jenkins_home/}/ # without leading slash
-        ( tar -xzvf $target_file -C /var/jenkins_home --exclude=$exclusion_pattern  || die "Extraction failure" ) 2>&1 | tee last_provision.log
+        if [[ "$target_file" = *.tgz ]]; then
+            say "UNPACKING $target_file as tar"
+            ### TODO: for some reason it does not exclude files from archive! fix later   
+            exclusion_pattern=./${PWD#/var/jenkins_home/}/ # without leading slash
+            ( tar -xzvf $target_file -C /var/jenkins_home --exclude=$exclusion_pattern  || die "Extraction failure" ) 2>&1 | tee last_provision.log
+
+        elif [[ "$target_file" = *.zip ]]; then
+            say "UNPACKING $target_file as zip"
+            ( unzip -o $target_file -d /var/jenkins_home || die "Extraction failure" ) 2>&1 | tee last_provision.log
+        fi
         say "PROVISIONING FINISHED"
     
         POSTPROVISION_DIR=/var/jenkins_home/system/postprovision_hooks
