@@ -60,6 +60,9 @@ COPY security.groovy /usr/share/jenkins/ref/init.groovy.d/security.groovy
 COPY plugins.txt /usr/share/jenkins_cloudbuilder/default_plugins_list.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins_cloudbuilder/default_plugins_list.txt
 
+# installation and validation of public keys from major Git services
+COPY ssh_keyscan.sh /usr/local/bin
+RUN chmod a+x /usr/local/bin/ssh_keyscan.sh && /bin/bash /usr/local/bin/ssh_keyscan.sh
 
 ### TODO: https://github.com/edx/jenkins-configuration/tree/master/src/main/groovy
 
