@@ -31,7 +31,7 @@ RUN apk --no-cache add python py-pip git &&\
 
 # get back to desired set of packages
 RUN apk add --update \
-    sudo pwgen ansible py-pip terraform git \
+    sudo pwgen ansible py-pip terraform git jq \
     && rm -rf /var/cache/apk/*
 
 RUN pip install awscli --upgrade
