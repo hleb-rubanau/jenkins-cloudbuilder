@@ -16,8 +16,7 @@ RUN apk --no-cache add python py-pip git &&\
     unlink /lib/ld-linux-x86-64.so.2 /lib64 ldd ||true &&\
     mv dist/docker-compose /usr/local/bin/docker-compose-original &&\
     pip freeze | xargs pip uninstall -y &&\
-    apk del python py-pip git &&\
-    rm -rf /code /usr/lib/python2.7/ /root/.cache /var/cache/apk/* &&\
+    rm -rf /code /root/.cache /var/cache/apk/* &&\
     chmod +x /usr/local/bin/docker-compose-original
 
 #ENV GLIBC 2.23-r3
@@ -32,7 +31,7 @@ RUN apk --no-cache add python py-pip git &&\
 
 # get back to desired set of packages
 RUN apk add --update \
-    sudo pwgen ansible py-pip terraform \
+    sudo pwgen ansible py-pip terraform git \
     && rm -rf /var/cache/apk/*
 
 RUN pip install awscli --upgrade
