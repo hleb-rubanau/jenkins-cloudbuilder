@@ -30,7 +30,10 @@ RUN wget -q -O /tmp/docker.tgz \
         https://download.docker.com/linux/static/stable/$(uname -m)/docker-${DOCKER_CLI_VERSION}-ce.tgz \
     && cd /tmp              \
     && tar -xzf docker.tgz  \
-    && cp docker/docker /usr/local/bin/docker-cli \
+    && cp docker/docker /usr/local/bin/docker \
     && rm -rf /tmp/docker*
+
+COPY docker-sigkill.sh /usr/local/bin/docker-sigkill
+RUN chmod a+x /usr/local/bin/docker-sigkill
 
 ENTRYPOINT ["confd"]

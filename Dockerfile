@@ -14,11 +14,11 @@ RUN apk --no-cache add python py-pip git &&\
     ln -s /lib /lib64 && ln -s /lib/libc.musl-x86_64.so.1 ldd && ln -s /lib/ld-musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2 && \
     pyinstaller docker-compose.spec &&\
     unlink /lib/ld-linux-x86-64.so.2 /lib64 ldd ||true &&\
-    mv dist/docker-compose /usr/local/bin/docker-compose &&\
+    mv dist/docker-compose /usr/local/bin/docker-compose-original &&\
     pip freeze | xargs pip uninstall -y &&\
     apk del python py-pip git &&\
     rm -rf /code /usr/lib/python2.7/ /root/.cache /var/cache/apk/* &&\
-    chmod +x /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose-original
 
 #ENV GLIBC 2.23-r3
 #RUN apk update && apk add --no-cache openssl ca-certificates && \
@@ -57,27 +57,29 @@ ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
 COPY security.groovy /usr/share/jenkins/ref/init.groovy.d/security.groovy 
 
 # Viktor Farcic, thanks again! (see link above)
-ADD plugins.txt /usr/share/jenkins_cloudbuilder/default_plugins_list.txt
+COPY plugins.txt /usr/share/jenkins_cloudbuilder/default_plugins_list.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins_cloudbuilder/default_plugins_list.txt
 
 
 ### TODO: https://github.com/edx/jenkins-configuration/tree/master/src/main/groovy
 
 # install logging template, used in custom entrypoint
-ADD jenkins_log.properties.template /usr/share/jenkins_cloudbuilder/jenkins_log.properties.template 
+COPY jenkins_log.properties.template /usr/share/jenkins_cloudbuilder/jenkins_log.properties.template 
 
 # now let's make it more friendly to local docker with proxied socked and possible uids mismatch
-ADD sudoers /etc/sudoers
-ADD docker_wrapper /usr/local/bin/docker 
+COPY sudoers /etc/sudoers
+COPY docker_wrapper /usr/local/bin/docker 
+COPY docker_compose_wrapper /usr/local/bin/docker-compose
 
 # install custom entrypoint and make everything executable
-ADD secrets_adapter.sh /usr/local/bin/jenkins_cloudbuilder_secrets_adapter.sh
+COPY secrets_adapter.sh /usr/local/bin/jenkins_cloudbuilder_secrets_adapter.sh
 RUN chmod 0544 /usr/local/bin/jenkins_cloudbuilder_secrets_adapter.sh 
 
 COPY bootstrapper.sh /usr/share/jenkins_cloudbuilder/bootstrapper.sh
 
-ADD entrypoint.sh /usr/local/bin/jenkins_cloudbuilder_entrypoint.sh
-RUN bash -c 'for util in docker jenkins_cloudbuilder_entrypoint.sh ; do chown jenkins:jenkins /usr/local/bin/$util && chmod 0554 /usr/local/bin/$util ; done'
+COPY docker-sigkill.sh /usr/local/bin/docker-sigkill
+COPY entrypoint.sh /usr/local/bin/jenkins_cloudbuilder_entrypoint.sh
+RUN bash -c 'for util in docker docker-compose jenkins_cloudbuilder_entrypoint.sh docker-sigkill; do chown jenkins:jenkins /usr/local/bin/$util && chmod 0554 /usr/local/bin/$util ; done'
 
 ENTRYPOINT [ "/usr/local/bin/jenkins_cloudbuilder_entrypoint.sh" ]
 
