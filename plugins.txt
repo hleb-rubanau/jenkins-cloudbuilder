@@ -107,6 +107,7 @@ ssh-agent
 ssh-credentials
 structs
 subversion
+summary_report
 timestamper
 token-macro
 variant
