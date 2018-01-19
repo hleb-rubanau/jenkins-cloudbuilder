@@ -79,9 +79,10 @@ RUN chmod 0544 /usr/local/bin/jenkins_cloudbuilder_secrets_adapter.sh
 
 COPY bootstrapper.sh /usr/share/jenkins_cloudbuilder/bootstrapper.sh
 
-COPY docker-sigkill.sh /usr/local/bin/docker-sigkill
-COPY entrypoint.sh /usr/local/bin/jenkins_cloudbuilder_entrypoint.sh
-RUN bash -c 'for util in docker docker-compose jenkins_cloudbuilder_entrypoint.sh docker-sigkill; do chown jenkins:jenkins /usr/local/bin/$util && chmod 0554 /usr/local/bin/$util ; done'
+COPY docker-sigkill.sh          /usr/local/bin/docker-sigkill
+COPY entrypoint.sh              /usr/local/bin/jenkins_cloudbuilder_entrypoint.sh
+COPY sudoers_injector.sh        /usr/local/bin/sudoers_injector.sh
+RUN bash -c 'for util in docker docker-compose jenkins_cloudbuilder_entrypoint.sh sudoers_injector.sh docker-sigkill; do chown jenkins:jenkins /usr/local/bin/$util && chmod 0554 /usr/local/bin/$util ; done'
 
 ENTRYPOINT [ "/usr/local/bin/jenkins_cloudbuilder_entrypoint.sh" ]
 
