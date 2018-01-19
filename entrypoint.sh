@@ -56,4 +56,4 @@ else
 fi
 
 # pass execution to upstream entrypoint
-exec /bin/tini -- /usr/local/bin/jenkins.sh $*
+exec /sbin/tini -- /usr/local/bin/jenkins.sh $*
