@@ -21,7 +21,7 @@ for script in "${SCRIPTLIST[@]}"; do
     fi
 
     SUDOERS_FILE=/etc/sudoers    
-    sudo_line="jenkins      ALL = (root) NOPASSWD:$scriptpath"
+    sudo_line="jenkins      ALL = (root) NOPASSWD:SETENV:$scriptpath"
     if grep -q "${sudo_line}" $SUDOERS_FILE ; then
         say "Already in sudoers: $sudo_line"
         continue
