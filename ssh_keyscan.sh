@@ -21,7 +21,7 @@ fi
 ssh-keyscan bitbucket.org bitbucket.com > bitbucket.com.keys
 bitbucket_fingerprint=$( ssh-keygen -l -f bitbucket.com.keys | grep bitbucket.org | head -n1 )
 
-BITBUCKET_FINGERPRINTS_URL="https://confluence.atlassian.com/bitbucket/troubleshoot-ssh-issues-271943403.html"
+BITBUCKET_FINGERPRINTS_URL="https://confluence.atlassian.com/bitbucket/ssh-keys-935365775.html"
 wget -O bitbucket_fingerprints.html $BITBUCKET_FINGERPRINTS_URL
 bitbucket_sha_lines=$( cat bitbucket_fingerprints.html | \
                         grep -A10 "The public key fingerprints for the Bitbucket server are" \
