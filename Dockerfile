@@ -83,7 +83,7 @@ COPY docker-sigkill.sh          /usr/local/bin/docker-sigkill
 COPY fix_mount_permissions.sh   /usr/local/bin/fix_mount_permissions.sh
 COPY entrypoint.sh              /usr/local/bin/jenkins_cloudbuilder_entrypoint.sh
 COPY sudoers_injector.sh        /usr/local/bin/sudoers_injector.sh
-RUN bash -c 'for util in docker docker-compose jenkins_cloudbuilder_entrypoint.sh sudoers_injector.sh docker-sigkill; do chown jenkins:jenkins /usr/local/bin/$util && chmod 0554 /usr/local/bin/$util ; done'
+RUN bash -c 'for util in docker docker-compose jenkins_cloudbuilder_entrypoint.sh sudoers_injector.sh fix_mount_permissions.sh docker-sigkill; do chown jenkins:jenkins /usr/local/bin/$util && chmod 0554 /usr/local/bin/$util ; done'
 
 ENTRYPOINT [ "/usr/local/bin/jenkins_cloudbuilder_entrypoint.sh" ]
 
