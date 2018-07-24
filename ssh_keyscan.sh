@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+function say() { echo "$*" >&2 ; }
 
 ssh-keyscan github.com > github.com.keys
 github_fingerprint=$(ssh-keygen -l -f github.com.keys | cut -f2 -d' ')

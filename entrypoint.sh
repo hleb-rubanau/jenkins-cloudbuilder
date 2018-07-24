@@ -33,7 +33,7 @@ sed -e s/JENKINS_LOGLEVEL/${JENKINS_LOGLEVEL}/g \
 export JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.config.file=$LOGPROP_FILE "
 
 # run custom adapter for insecure secrets injection
-sudo jenkins_cloudbuilder_secrets_adapter.sh 
+sudo -E jenkins_cloudbuilder_secrets_adapter.sh 
 
 # run external provision -- unpack the archive, potentially overriding parts of data under /home
 # also run hooks if needed
@@ -50,7 +50,7 @@ fi
 # if there's a flag ALLOW_SUDO, set up sudo access for the scripts it mentions
 # be aware, that script will remove itself afterwards, to ensure it is run only once per container lifecycle
 if [ -e /usr/local/bin/sudoers_injector.sh ]; then
-    sudo sudoers_injector.sh "$ALLOW_SUDO"
+    sudo -E /usr/local/bin/sudoers_injector.sh "$ALLOW_SUDO"
 else
     say "Sudoers injector is already removed"
 fi

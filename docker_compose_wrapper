@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # the only purpose of wrapper is to avoid sudo calls
-sudo /usr/local/bin/docker-compose-original $@
+sudo -E /usr/local/bin/docker-compose-original $@

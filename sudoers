@@ -1,7 +1,7 @@
 
 root    ALL=(ALL:ALL) ALL
-jenkins      ALL = (root) NOPASSWD:/usr/local/bin/docker-cli
-jenkins      ALL = (root) NOPASSWD:/usr/local/bin/docker-compose-original
-jenkins      ALL = (root) NOPASSWD:/usr/local/bin/jenkins_cloudbuilder_secrets_adapter.sh
-jenkins      ALL = (root) NOPASSWD:/usr/local/bin/sudoers_injector.sh
-jenkins      ALL = (root) NOPASSWD:/usr/local/bin/fix_mount_permissions.sh
+jenkins      ALL = (root) NOPASSWD:SETENV:/usr/local/bin/docker-cli
+jenkins      ALL = (root) NOPASSWD:SETENV:/usr/local/bin/docker-compose-original
+jenkins      ALL = (root) NOPASSWD:SETENV:/usr/local/bin/jenkins_cloudbuilder_secrets_adapter.sh
+jenkins      ALL = (root) NOPASSWD:SETENV:/usr/local/bin/sudoers_injector.sh
+jenkins      ALL = (root) NOPASSWD:SETENV:/usr/local/bin/fix_mount_permissions.sh
