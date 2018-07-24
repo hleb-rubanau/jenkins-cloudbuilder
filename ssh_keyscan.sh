@@ -35,8 +35,33 @@ else
    exit
 fi  
 
+#########################################
+### GITLAB
+
+say "Scanning gitlab.com" 
+ssh-keyscan gitlab.com > gitlab.com.keys 2>/dev/null
+gitlab_fingerprint=$( ssh-keygen -l -f gitlab.com.keys | head -n1 | cut -f2 -d' ' | cut -f2 -d: )
+
+
+say "Obtaining announced fingerprints from gitlab.com"
+GITLAB_FINGERPRINTS_URL="https://docs.gitlab.com/ee/user/gitlab_com/"
+curl -s -o gitlab_fingerprints.html $GITLAB_FINGERPRINTS_URL
+
+say "Comparing gitlab fingerprints"
+gitlab_sha_lines=$( grep -A30 SHA256 gitlab_fingerprints.html | grep code | grep '<td>' | grep -v ':' | cut -f3 -d '>' | cut -f1 -d '<' | tee gitlab.sha.lines )
+
+
+if [ ! -z "$gitlab_fingerprint" ] && echo "$gitlab_sha_lines" | grep -q "$gitlab_fingerprint" ; then
+   say "Gitlab fingerprint validated"
+   cat gitlab.com.keys >> /etc/ssh/ssh_known_hosts
+else
+   say "ERROR: Validation failed for gitlab keys!"
+fi  
+
 rm -f github_fingerprints.html
+rm -f gitab_fingerprints.html
 rm -f bitbucket_fingerprints.html
 rm -f bitbucket.com.keys
 rm -f github.com.keys
+rm -f gitlab.com.keys
 
